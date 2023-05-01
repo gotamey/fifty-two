@@ -1,0 +1,22 @@
+name: Fifty-two CD
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: SSH Login
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SECRET_KEY }}
+          script: |
+            cd /home/deployer/fifty-two
+            git pull
+            composer update -o
+            sudo systemctl restart php8.1-fpm.service
